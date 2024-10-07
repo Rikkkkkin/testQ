@@ -1,0 +1,57 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.question {
+  margin-bottom: 20px;
+}
+
+.options label {
+  display: block;
+  margin-left: 20px;
+}
+
+button {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 20px;
+}
+
+#result {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.2em;
+  color: green;
+}
+
+/* Progress Bar Styles */
+#progress-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  height: 25px;
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: #76c7c0;
+  border-radius: 25px;
+  transition: width 0.3s ease-in-out;
+}
+
+#progress-bar::after {
+  content: attr(data-percentage) '%';
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+}
