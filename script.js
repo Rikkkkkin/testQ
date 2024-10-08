@@ -30,21 +30,39 @@ document.getElementById('questionnaire').addEventListener('submit', function(eve
   const userAnswers = {};
   let allAnswered = true;
 
-  for (let question in answers) {
-    const answer = document.querySelector(`input[name="${question}"]:checked`);
+  // Remove previous highlights
+  const questionDivs = document.querySelectorAll('.question');
+  questionDivs.forEach(questionDiv => {
+    questionDiv.classList.remove('unanswered');
+  });
+
+  // Check for unanswered questions and highlight them
+  for (let i = 1; i <= totalQuestions; i++) {
+    const questionName = `q${i}`;
+    const answer = document.querySelector(`input[name="${questionName}"]:checked`);
     if (answer) {
-      userAnswers[question] = answer.value;
+      userAnswers[questionName] = answer.value;
     } else {
       allAnswered = false;
-      break;
+      // Highlight the unanswered question
+      const questionDiv = document.querySelector(`#question-${i}`);
+      if (questionDiv) {
+        questionDiv.classList.add('unanswered');
+      }
     }
   }
 
   if (!allAnswered) {
-    alert('Please answer all questions.');
+    alert('Please answer all unanswered questions highlighted in red.');
+    // Scroll to the first unanswered question
+    const firstUnanswered = document.querySelector('.unanswered');
+    if (firstUnanswered) {
+      firstUnanswered.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     return;
   }
 
+  // Calculate the score
   for (let question in answers) {
     if (userAnswers[question] === answers[question]) {
       score++;
@@ -54,7 +72,6 @@ document.getElementById('questionnaire').addEventListener('submit', function(eve
   document.getElementById('result').innerText = `You scored ${score} out of ${totalQuestions}.`;
 });
 
-// New code to handle progress bar updates
 // Function to update the progress bar
 function updateProgressBar() {
   const totalQuestions = 20;
@@ -74,11 +91,17 @@ function updateProgressBar() {
   progressBar.setAttribute('data-percentage', progressPercent);
 }
 
-
 // Add event listeners to all radio buttons
 const radioButtons = document.querySelectorAll('input[type="radio"]');
 radioButtons.forEach((radio) => {
-  radio.addEventListener('change', updateProgressBar);
+  radio.addEventListener('change', function() {
+    updateProgressBar();
+    // Remove highlight if the question is answered
+    const questionDiv = this.closest('.question');
+    if (questionDiv.classList.contains('unanswered')) {
+      questionDiv.classList.remove('unanswered');
+    }
+  });
 });
 
 // Initialize progress bar on page load
